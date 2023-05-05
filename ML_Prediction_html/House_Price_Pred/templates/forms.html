@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Forms</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    </link>
+
+    <style type="text/css">
+        body {
+            background-color: #A1E1D4;
+            font-family: Quicksand;
+            font-size: 18px;
+        }
+        /*HEADER*/
+        
+        h1 {
+            text-align: center;
+            font-size: 38px;
+        }
+        /*FORM'S HEADER*/
+        
+        #description {
+            text-align: center;
+            font-size: 20px;
+            padding-top: 20px;
+            padding-bottom: 15px;
+        }
+        /*FIELDSET*/
+        
+        .fieldset {
+            background-color: white;
+            border-radius: 10px;
+            border: none;
+            max-width: 50%;
+            margin: auto;
+            padding-top: 1%;
+        }
+        
+        .all-content {
+            position: relative;
+            right: 30px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 1%;
+        }
+        /*INPUT FIELDS*/
+        
+        label.left {
+            width: 30%;
+        }
+        
+        .right {
+            width: 30%;
+            padding-left: 4%;
+            text-align: center;
+        }
+        
+        .input-field {
+            height: 10px;
+            padding: 5px;
+            border: 1px solid #C0C0C0;
+            border-radius: 2px;
+        }
+        /*DROPDOWN FORMS*/
+        
+        #dropdown,
+        #dropdown2,#dropdown3,#dropdown4,#dropdown5,#dropdown6,#dropdown7,#dropdown8,#dropdown9,#dropdown10,#dropdown11,#dropdown12,#dropdown13 {
+            font-family: Quicksand;
+            font-size: 13px;
+            height: 30px;
+            border: 1px solid #C0C0C0;
+            border-radius: 2px;
+        }
+        /*SUBMIT BUTTON*/
+        
+        #submit {
+            background: #75AFE8;
+            border: none;
+            border-radius: 3px;
+            font-size: 18px;
+            color: white;
+            text-weight: bold;
+            padding: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            position: relative;
+            left: 450px;
+            top: -20px;
+        }
+        
+        #submit:hover {
+            cursor: pointer;
+            background: #A1E1D4;
+        }
+    </style>
+</head>
+
+
+<body>
+    <!--HEADER-->
+    <header>
+        <h1 id="title">House Price Predictor</h1>
+    </header>
+    <!--FIELDSET-->
+    <form id="survey-form" name="survey_form" action="{{ url_for('predict_page') }}" method="POST">
+        <fieldset class="fieldset">
+            <!--FORM'S HEADER-->
+            <!--<div id="description">Let us know how we can improve freeCodeCamp</div>-->
+            <!--INPUT FORMS-->
+
+            <!--DROPDOWN FORM-->
+            <div class="all-content">
+                <label for="dropdown" class="left" id="Bedroom">Bedroom</label>
+
+                <select name="bedroom" class="right dropdown" id="dropdown">
+        <option selected="Select an option">Select Number of BedRooms</option>
+        <option value="1.0">1.0</option>
+        <option value="2.0">2.0</option>
+        <option value="3.0">3.0</option>
+        <option value="4.0">4.0</option>
+        <option value="5.0">5.0</option>
+        <option value="6.0">6.0</option>
+        <option value="7.0">7.0</option>
+        <option value="8.0">8.0</option>
+        <option value="9.0">9.0</option>
+      </select>
+            </div>
+            <div class="all-content">
+                <label for="dropdown" class="left" id="Bathroom">Bathroom</label>
+
+                <select name="bathroom" class="right dropdown" id="dropdown2">
+        <option selected="Select an option">Select Number of BathRoom</option>
+        <option value="1.0">1.0</option>
+        <option value="2.0">2.0</option>
+        <option value="3.0">3.0</option>
+        <option value="4.0">4.0</option>
+        <option value="5.0">5.0</option>
+        <option value="6.0">6.0</option>
+        <option value="7.0">7.0</option>
+        <option value="8.0">8.0</option>
+        
+      </select>
+            </div>
+
+            <div class="all-content">
+                <label for="dropdown" class="left" id="Sqft_Living">Sqft_Living</label>
+
+                <select name="sqftliv" class="right dropdown" id="dropdown3">
+        <option selected="Select an option">Select from dropdown</option>
+        <option value="550">550</option>
+        <option value="1200">1200</option>
+        <option value="1350">1350</option>
+        <option value="5000">5000</option>
+        <option value="7000">7000</option>
+        <option value="9000">9000</option>
+        <option value="10450">10450</option>
+        <option value="11780">11780</option>
+        
+      </select>
+            </div>
+            <div class="all-content">
+                <label for="dropdown" class="left" id="Sqft_Lot">Sqft_Lot</label>
+
+                <select name="sqftlot" class="right dropdown" id="dropdown4">
+        <option selected="Select an option">Select from dropdown</option>
+        <option value="5800">5800</option>
+        <option value="12000">12000</option>
+        <option value="13500">13500</option>
+        <option value="50000">50000</option>
+        <option value="70500">70500</option>
+        <option value="92000">92000</option>
+        <option value="14507">17450</option>
+        <option value="53780">53780</option>
+        
+      </select>
+            </div>
+
+            <div class="all-content">
+                <label for="dropdown" class="left" id="Floors">Floors</label>
+
+                <select name="floors" class="right dropdown" id="dropdown5">
+        <option selected="Select an option">Select from dropdown</option>
+        <option value="1.5">1.5</option>
+        <option value="2.0">2.0</option>
+        <option value="2.5">2.5</option>
+        <option value="3.0">3.0</option>
+        <option value="3.5">3.5</option> 
+      </select>
+            </div>
+            <div class="all-content">
+                <label for="dropdown" class="left" id="Waterfront">Waterfront</label>
+
+                <select name="waterfront" class="right dropdown" id="dropdown6">
+        <option selected="Select an option">Select from dropdown</option>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        
+      </select>
+            </div>
+
+            <div class="all-content">
+                <label for="dropdown" class="left" id="View">View</label>
+
+                <select name="view" class="right dropdown" id="dropdown7">
+        <option selected="Select an option">Select from dropdown</option>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option> 
+      </select>
+            </div>
+
+            <div class="all-content">
+                <label for="dropdown" class="left" id="Condition">Condition</label>
+
+                <select name="condition" class="right dropdown" id="dropdown8">
+        <option selected="Select an option">Select from dropdown</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option> 
+      </select>
+            </div>
+
+            <div class="all-content">
+                <label for="dropdown" class="left" id="Sqft_Above">Sqft_Above</label>
+
+                <select name="sqftabv" class="right dropdown" id="dropdown9">
+        <option selected="Select an option">Select from dropdown</option>
+        <option value="578">578</option>
+        <option value="1200">1200</option>
+        <option value="1350">1350</option>
+        <option value="5000">5000</option>
+        <option value="7050">7050</option>
+        <option value="8200">8200</option>
+        <option value="8750">8750</option>
+        <option value="9000">9000</option>
+        
+      </select>
+            </div>
+
+            <div class="all-content">
+                <label for="dropdown" class="left" id="Sqft_Basement">Sqft_Basement</label>
+
+                <select name="sqftbas" class="right dropdown" id="dropdown10">
+        <option selected="Select an option">Select from dropdown</option>
+        <option value="0">0</option>
+        <option value="20">20</option>
+        <option value="350">350</option>
+        <option value="500">500</option>
+        <option value="705">705</option>
+        <option value="820">820</option>
+        <option value="875">875</option>
+        <option value="900">900</option>
+        
+      </select>
+            </div>
+
+            <div class="all-content">
+                <label for="dropdown" class="left" id="Yr_Built">Yr_Built</label>
+
+                <select name="yrbuilt" class="right dropdown" id="dropdown11">
+        <option selected="Select an option">Select from dropdown</option>
+        <option value="1916">1916</option>
+        <option value="1925">1925</option>
+        <option value="1956">1956</option>
+        <option value="1972">1972</option>
+        <option value="1983">1983</option>
+        <option value="1992">1992</option>
+       
+      </select>
+            </div>
+            <div class="all-content">
+                <label for="dropdown" class="left" id="Yr_Renovated">Yr_Renovated</label>
+
+                <select name="yrrenov" class="right dropdown" id="dropdown12">
+        <option selected="Select an option">Select from dropdown</option>
+        <option value="2003">2003</option>
+        <option value="2005">2005</option>
+        <option value="2006">2006</option>
+        <option value="2008">2008</option>
+        <option value="2010">2010</option>
+        <option value="2012">2012</option>
+       
+      </select>
+            </div>
+            <div class="all-content">
+                <label for="dropdown" class="left" id="City">City</label>
+
+                <select name="city" class="right dropdown" id="dropdown13">
+        <option selected="Select an option">Select from dropdown</option>
+        <option value="Shoreline">Shoreline</option>
+        <option value="Bellevue">Bellevue</option>
+        <option value="Seattle">Seattle</option>
+        <option value="Bothell">Bothell</option>
+        <option value="Federal Way">Federal Way</option>
+        <option value="Kirkland">Kirkland</option>
+       
+      </select>
+            </div>
+
+
+
+            <br></br>
+            <!--SUBMIT BUTTON-->
+            <div class="all-contact">
+                <button type="submit" id="submit">Submit</button>
+            </div>
+
+        </fieldset>
+    </form>
+
+</body>
+
+</html>
