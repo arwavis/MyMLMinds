@@ -39,7 +39,7 @@ log_pred = log_model.predict(scaled_X_test)
 log_cm = confusion_matrix(y_test, log_pred)
 log_ac = accuracy_score(y_test, log_pred)
 rounded_log_ac = np.round(float(log_ac), 2)
-print(f"Accuracy: {rounded_log_ac * 100}")
+print(f"Accuracy (Logistic Regression): {rounded_log_ac * 100}")
 # print("Confusion Matrix {0}".format(log_conf))
 print("Confusion Matrix: ")
 print(log_cm)
@@ -56,7 +56,7 @@ knn_pred = full_cv_classifier.predict(scaled_X_test)
 knn_cm = confusion_matrix(y_test, knn_pred)
 knn_ac = accuracy_score(y_test, knn_pred)
 rounded_knn_ac = np.round(float(knn_ac), 2)
-print(f"Accuracy: {rounded_knn_ac * 100}")
+print(f"Accuracy (KNN): {rounded_knn_ac * 100}")
 print("Confusion Matrix: ")
 print(knn_cm)
 
@@ -69,7 +69,7 @@ svc_grid_pred = svc_grid.predict(scaled_X_test)
 svc_cm = confusion_matrix(y_test, svc_grid_pred)
 svc_ac = accuracy_score(y_test, svc_grid_pred)
 rounded_svc_ac = np.round(float(svc_ac), 2)
-print(f"Accuracy: {rounded_svc_ac * 100}")
+print(f"Accuracy (SVM): {rounded_svc_ac * 100}")
 print("Confusion Matrix: ")
 print(svc_cm)
 
@@ -80,7 +80,7 @@ decision_tree_pred = decision_tree_model.predict(scaled_X_test)
 dt_cm = confusion_matrix(y_test, decision_tree_pred)
 dt_ac = accuracy_score(y_test, decision_tree_pred)
 rounded_dt_ac = np.round(float(dt_ac), 2)
-print(f"Accuracy: {rounded_dt_ac * 100}")
+print(f"Accuracy (DTM): {rounded_dt_ac * 100}")
 print("Confusion Matrix: ")
 print(dt_cm)
 
@@ -92,7 +92,7 @@ Random_Forest_preds = Random_Forest_model.predict(scaled_X_test)
 rf_cm = confusion_matrix(y_test, Random_Forest_preds)
 rf_ac = accuracy_score(y_test, Random_Forest_preds)
 rounded_rf_ac = np.round(float(rf_ac), 2)
-print(f"Accuracy: {rounded_rf_ac * 100}")
+print(f"Accuracy (RFM): {rounded_rf_ac * 100}")
 print("Confusion Matrix: ")
 print(rf_cm)
 
@@ -103,7 +103,7 @@ ada_boost_preds = ada_boost_model.predict(scaled_X_test)
 adb_cm = confusion_matrix(y_test, ada_boost_preds)
 adb_ac = accuracy_score(y_test, ada_boost_preds)
 rounded_adb_ac = np.round(float(adb_ac), 2)
-print(f"Accuracy: {rounded_adb_ac * 100}")
+print(f"Accuracy (A-Boost): {rounded_adb_ac * 100}")
 print("Confusion Matrix: ")
 print(adb_cm)
 
@@ -117,7 +117,7 @@ gb_predictions = gb_grid.predict(scaled_X_test)
 gb_cm = confusion_matrix(y_test, gb_predictions)
 gb_ac = accuracy_score(y_test, gb_predictions)
 rounded_gb_ac = np.round(float(gb_ac), 2)
-print(f"Accuracy: {rounded_gb_ac * 100}")
+print(f"Accuracy (G-Boost): {rounded_gb_ac * 100}")
 print("Confusion Matrix: ")
 print(gb_cm)
 
@@ -204,18 +204,79 @@ def gb_boosting():
 
     print(f"Above data is calculated with an Accuracy {rounded_gb_ac * 100}% ")
     
-# Condition to check with Model performs better and predicts the result.
-if log_ac >= knn_ac and log_ac >= svc_ac and log_ac >= dt_ac and log_ac >= rf_ac and log_ac >= adb_ac and log_ac >= gb_ac:
+# # Condition to check with Model performs better and predicts the result.
+# if log_ac >= knn_ac and log_ac >= svc_ac and log_ac >= dt_ac and log_ac >= rf_ac and log_ac >= adb_ac and log_ac >= gb_ac:
+#     log_reg()
+# elif knn_ac >= log_ac and knn_ac >= svc_ac and knn_ac >= dt_ac and knn_ac >= rf_ac and knn_ac >= adb_ac and knn_ac >= gb_ac:
+#     knn_reg()
+# elif svc_ac >= log_ac and svc_cm >= knn_ac and svc_ac >= dt_ac and svc_ac >= rf_ac and svc_ac >= adb_ac and svc_ac >= gb_ac:
+#     svc_reg()
+# elif dt_ac >= log_ac and dt_ac >= knn_ac and dt_ac >= svc_ac and dt_ac >= rf_ac and dt_ac >= adb_ac and dt_ac >= gb_ac:
+#     dt_reg()
+# elif rf_ac >= log_ac and rf_ac >= knn_ac and rf_ac >= svc_ac and rf_ac >= dt_ac and rf_ac >= adb_ac and rf_ac >= gb_ac:
+#     rf_reg()
+# elif adb_ac >= log_ac and adb_ac >= knn_ac and adb_ac >= svc_ac and adb_ac >= dt_ac and adb_ac >= rf_ac and adb_ac >= gb_ac:
+#     adb_boosting()
+# else:
+#     gb_boosting()
+
+#Alternative: instead of using the long conditional statment above.
+
+# Store accuracies and corresponding functions in a dictionary
+model_accuracies = {
+    'log_ac': log_ac,
+    'knn_ac': knn_ac,
+    'svc_ac': svc_ac,
+    'dt_ac': dt_ac,
+    'rf_ac': rf_ac,
+    'adb_ac': adb_ac,
+    'gb_ac': gb_ac
+}
+
+# Find the maximum accuracy and call the corresponding function
+max_accuracy_key = max(model_accuracies, key=model_accuracies.get)
+max_accuracy_value = model_accuracies[max_accuracy_key]
+
+# Call the corresponding function
+if max_accuracy_key == 'log_ac':
     log_reg()
-elif knn_ac >= log_ac and knn_ac >= svc_ac and knn_ac >= dt_ac and knn_ac >= rf_ac and knn_ac >= adb_ac and knn_ac >= gb_ac:
+elif max_accuracy_key == 'knn_ac':
     knn_reg()
-elif svc_ac >= log_ac and svc_cm >= knn_ac and svc_ac >= dt_ac and svc_ac >= rf_ac and svc_ac >= adb_ac and svc_ac >= gb_ac:
+elif max_accuracy_key == 'svc_ac':
     svc_reg()
-elif dt_ac >= log_ac and dt_ac >= knn_ac and dt_ac >= svc_ac and dt_ac >= rf_ac and dt_ac >= adb_ac and dt_ac >= gb_ac:
+elif max_accuracy_key == 'dt_ac':
     dt_reg()
-elif rf_ac >= log_ac and rf_ac >= knn_ac and rf_ac >= svc_ac and rf_ac >= dt_ac and rf_ac >= adb_ac and rf_ac >= gb_ac:
+elif max_accuracy_key == 'rf_ac':
     rf_reg()
-elif adb_ac >= log_ac and adb_ac >= knn_ac and adb_ac >= svc_ac and adb_ac >= dt_ac and adb_ac >= rf_ac and adb_ac >= gb_ac:
+elif max_accuracy_key == 'adb_ac':
     adb_boosting()
 else:
     gb_boosting()
+
+# Handle the case where there are multiple best models
+# Find the maximum accuracy
+max_accuracy_value = max(model_accuracies.values())
+
+# Find all models with the maximum accuracy
+best_models = [key for key, value in model_accuracies.items() if value == max_accuracy_value]
+
+# Handle the case where there are multiple best models (e.g., by printing them)
+if len(best_models) == 1:
+    best_model = best_models[0]
+    if best_model == 'log_ac':
+        log_reg()
+    elif best_model == 'knn_ac':
+        knn_reg()
+    elif best_model == 'svc_ac':
+        svc_reg()
+    elif best_model == 'dt_ac':
+        dt_reg()
+    elif best_model == 'rf_ac':
+        rf_reg()
+    elif best_model == 'adb_ac':
+        adb_boosting()
+    else:
+        gb_boosting()
+else:
+    print(f"Multiple models ({', '.join(best_models)}) have the same maximum accuracy.")
+    # Handle the case of multiple best models as needed
