@@ -1,3 +1,27 @@
+"""
+This script performs machine learning classification using various algorithms such as Logistic Regression, K-Nearest Neighbors (KNN),
+Decision Tree, Random Forest, Ada Boost, Gradient Boost, XG Boost, and Cat Boost. The dataset is read from 'train.csv', and the model
+is trained and evaluated on the data. The code includes data preprocessing, model training, hyperparameter tuning, and prediction on
+new data.
+
+Functions:
+- log_reg(): Predicts the outcome using Logistic Regression on new data and prints the result.
+- knn_reg(): Predicts the outcome using K-Nearest Neighbors on new data and prints the result.
+- dt_reg(): Predicts the outcome using Decision Tree on new data and prints the result.
+- rf_reg(): Predicts the outcome using Random Forest on new data and prints the result.
+- adb_boosting(): Predicts the outcome using Ada Boost on new data and prints the result.
+- gb_boosting(): Predicts the outcome using Gradient Boost on new data and prints the result.
+- xg_boost(): Predicts the outcome using XG Boost on new data and prints the result.
+- cat_boost(): Predicts the outcome using Cat Boost on new data and prints the result.
+
+Note: Some parts of the code are commented out, and certain libraries and plotting functions are not used. Uncommenting and
+enabling these sections can provide additional data analysis and visualization.
+
+Author: Aravind Viswanathan
+Date: 24/01/2024
+"""
+
+# Importing all required libraries
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
@@ -6,20 +30,20 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
-from sklearn.svm import SVC
+# from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 import warnings
 warnings.filterwarnings("ignore")
-import matplotlib.pyplot as plt
-import seaborn as sns
-import math
-import xgboost as xgb
-import shap
-import optuna
-from optuna import Trial
+# import matplotlib.pyplot as plt
+# import seaborn as sns
+# import math
+# import xgboost as xgb
+# import shap
+# import optuna
+# from optuna import Trial
 from catboost import CatBoostClassifier
 # from lightgbm import LGBMClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKFold
@@ -112,38 +136,96 @@ y=data['Exited']
 ## Splitting the dataset into training and testing set
 ### 20% of the dataset will be used for testing(evaluation) and 80% of the data will be used for training purposes
 
+# Import necessary libraries
+# from sklearn.model_selection import train_test_split
+# from sklearn.preprocessing import StandardScaler
+
+# Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=101)
-scaler = StandardScaler()
-scaled_X_train = scaler.fit_transform(X_train)
-scaled_X_test = scaler.transform(X_test)
+
+# Define a function to scale the data
+def scale_data(data):
+    """Function to scale data using StandardScaler"""
+    # Initialize StandardScaler
+    scaler = StandardScaler()
+    # Fit and transform data
+    return scaler.fit_transform(data)
+
+# Scale the training and testing sets
+scaled_X_train = scale_data(X_train)
+scaled_X_test = scale_data(X_test)
 
 ######################################## Logistic Regression ####################################################
+# from sklearn.linear_model import LogisticRegressionCV
+# from sklearn.metrics import confusion_matrix, accuracy_score
+# import numpy as np
+
+# Initialize the logistic regression model with cross-validation
 log_model = LogisticRegressionCV()
+
+# Fit the model to the training data
 log_model.fit(scaled_X_train, y_train)
+
+# Make predictions on the test data
 log_pred = log_model.predict(scaled_X_test)
-log_cm = confusion_matrix(y_test, log_pred)
+
+# Calculate the accuracy and confusion matrix of the predictions
 log_ac = accuracy_score(y_test, log_pred)
+log_cm = confusion_matrix(y_test, log_pred)
+
+# Print the accuracy and confusion matrix with proper formatting
 rounded_log_ac = np.round(float(log_ac), 2)
-print(f"Accuracy: {rounded_log_ac * 100}")
-# print("Confusion Matrix {0}".format(log_conf))
-print("Confusion Matrix: ")
+print(f"Logistic Regression Accuracy: {rounded_log_ac * 100}%")
+print("\nLogistic Regression Confusion Matrix:")
 print(log_cm)
 
 ############################################## KNN #############################################################
+# import numpy as np
+# from sklearn.pipeline import Pipeline
+# from sklearn._selection import GridSearchCV
+# from sklearn.neighbors import KNeighborsClassifier
+# from sklearn.preprocessing import StandardScaler
+# from sklearn.metrics import confusion_matrix, accuracy_score
+
+# Define the pipeline operations
+scaler = StandardScaler()
 knn = KNeighborsClassifier()
 operations = [('scaler', scaler), ('knn', knn)]
-pipe = Pipeline(operations)
+
+# Define the parameter grid for GridSearchCV
 k_values = list(range(1, 10))
 knn_param_grid = {'knn__n_neighbors': k_values}
-full_cv_classifier = GridSearchCV(pipe, knn_param_grid, cv=5, scoring='accuracy')
+
+# Define the full cross-validation classifier
+full_cv_classifier = GridSearchCV(
+    Pipeline(operations),  # Use the pipeline
+    knn_param_grid,  # Use the parameter grid
+    cv=5,  # Use 5-fold cross-validation
+    scoring='accuracy'  # Use accuracy scoring
+)
+
+# Fit the classifier to the training data
 full_cv_classifier.fit(scaled_X_train, y_train)
-full_cv_classifier.best_estimator_.get_params()
-knn_pred = full_cv_classifier.predict(scaled_X_test)
+
+# Get the best estimator
+best_estimator = full_cv_classifier.best_estimator_
+
+# Print the best parameters
+print("Best parameters:", best_estimator.get_params())
+
+# Make predictions on the test data
+knn_pred = best_estimator.predict(scaled_X_test)
+
+# Calculate the confusion matrix and accuracy score
 knn_cm = confusion_matrix(y_test, knn_pred)
 knn_ac = accuracy_score(y_test, knn_pred)
+
+# Round the accuracy score to two decimal places
 rounded_knn_ac = np.round(float(knn_ac), 2)
-print(f"Accuracy: {rounded_knn_ac * 100}")
-print("Confusion Matrix: ")
+
+# Print the accuracy score and confusion matrix
+print(f"KNN Accuracy: {rounded_knn_ac * 100}%")
+print("\nKNN Confusion Matrix:")
 print(knn_cm)
 
 ######################################## Support Vector Machine ####################################################
@@ -156,55 +238,116 @@ print(knn_cm)
 # svc_cm = confusion_matrix(y_test, svc_grid_pred)
 # svc_ac = accuracy_score(y_test, svc_grid_pred)
 # rounded_svc_ac = np.round(float(svc_ac), 2)
-# print(f"Accuracy: {rounded_svc_ac * 100}")
-# print("Confusion Matrix: ")
+# print(f"Support Vector Machine Accuracy: {rounded_svc_ac * 100}")
+# print("Support Vector Machine Confusion Matrix: ")
 # print(svc_cm)
 
 ######################################## Decision Tree #######################################################
+# from sklearn.metrics import confusion_matrix, accuracy_score
+# import numpy as np
+
+# Initialize the decision tree classifier
 decision_tree_model = DecisionTreeClassifier()
+
+# Fit the model to the training data
 decision_tree_model.fit(scaled_X_train, y_train)
+
+# Make predictions on the test data
 decision_tree_pred = decision_tree_model.predict(scaled_X_test)
+
+# Calculate the accuracy and confusion matrix
 dt_cm = confusion_matrix(y_test, decision_tree_pred)
 dt_ac = accuracy_score(y_test, decision_tree_pred)
-rounded_dt_ac = np.round(float(dt_ac), 2)
-print(f"Accuracy: {rounded_dt_ac * 100}")
-print("Confusion Matrix: ")
+
+# Round the accuracy score to two decimal places
+rounded_dt_ac = np.round(dt_ac, 2)
+
+# Print the accuracy score and confusion matrix
+print(f"Decision Tree Accuracy: {rounded_dt_ac * 100}%")
+print("\nDecision Tree Confusion Matrix:")
 print(dt_cm)
 
 ######################################## Random Forest Machine ##################################################
-# Use 10 random trees
-Random_Forest_model = RandomForestClassifier(n_estimators=10, random_state=101)
+# import numpy as np
+# from sklearn.metrics import confusion_matrix, accuracy_score
+# from sklearn.ensemble import RandomForestClassifier
+
+# Set the number of trees and random state
+NUM_TREES = 10
+RANDOM_STATE = 101
+
+# Initialize the Random Forest classifier
+Random_Forest_model = RandomForestClassifier(n_estimators=NUM_TREES, random_state=RANDOM_STATE)
+
+# Train the model on the scaled training data
 Random_Forest_model.fit(scaled_X_train, y_train)
+
+# Make predictions on the test data
 Random_Forest_preds = Random_Forest_model.predict(scaled_X_test)
+
+# Calculate the confusion matrix and accuracy score
 rf_cm = confusion_matrix(y_test, Random_Forest_preds)
 rf_ac = accuracy_score(y_test, Random_Forest_preds)
-rounded_rf_ac = np.round(float(rf_ac), 2)
-print(f"Accuracy: {rounded_rf_ac * 100}")
-print("Confusion Matrix: ")
+
+# Round the accuracy score to two decimal places
+rounded_rf_ac = np.round(rf_ac, 2)
+
+# Print the accuracy score and confusion matrix
+print(f"Random Forest Machine Accuracy: {rounded_rf_ac * 100}%")
+print("\nRandom Forest Machine Confusion Matrix:")
 print(rf_cm)
 
 ######################################## Boosting - ADA Boost ##################################################
+# Import necessary libraries
+# from sklearn.metrics import confusion_matrix, accuracy_score
+# import numpy as np
+# Initialize AdaBoostClass
 ada_boost_model = AdaBoostClassifier(n_estimators=15)
+
+# Fit the model with training data
 ada_boost_model.fit(scaled_X_train, y_train)
+
+# Make predictions on test data
 ada_boost_preds = ada_boost_model.predict(scaled_X_test)
+
+# Calculate evaluation metrics
 adb_cm = confusion_matrix(y_test, ada_boost_preds)
 adb_ac = accuracy_score(y_test, ada_boost_preds)
-rounded_adb_ac = np.round(float(adb_ac), 2)
-print(f"Accuracy: {rounded_adb_ac * 100}")
-print("Confusion Matrix: ")
+
+# Round the accuracy score to 2 decimal places
+rounded_adb_ac = np.round(adb_ac, 2)
+
+# Print the evaluation metrics
+print(f"ADA Boost Accuracy: {rounded_adb_ac * 100}%")
+print("\nADA Boost Confusion Matrix:")
 print(adb_cm)
 
 ######################################## Boosting - Gradien Boost ##################################################
+# Initialize AdaBoostClass
 gb_model = GradientBoostingClassifier()
+
+# Define hyperparameter grid
 gb_param_grid = {"n_estimators": [1, 5, 10], 'max_depth': [3, 4, 5, 6]}
+
+# Use GridSearchCV for hyperparameter tuning
 gb_grid = GridSearchCV(gb_model, gb_param_grid)
+
+# Fit the model with training data
 gb_grid.fit(scaled_X_train, y_train)
+
+# Make predictions using the  test data
 gb_predictions = gb_grid.predict(scaled_X_test)
+
+# Calculate the confusion matrix and accuracy score
 gb_cm = confusion_matrix(y_test, gb_predictions)
 gb_ac = accuracy_score(y_test, gb_predictions)
+
+# Round the accuracy score to two decimal places
 rounded_gb_ac = np.round(float(gb_ac), 2)
-print(f"Accuracy: {rounded_gb_ac * 100}")
-print("Confusion Matrix: ")
+
+# Print the evaluation metrics
+print(f"Gradien Boost Accuracy: {rounded_gb_ac * 100}")
+print("\nGradien Boost Confusion Matrix: ")
 print(gb_cm)
 
 ############################################# XG Boost ########################################################
@@ -217,18 +360,20 @@ xgb_param_grid = {'n_estimators': [1, 5, 10, 20],'max_depth': [3, 4, 5, 6],}
 
 # Use GridSearchCV for hyperparameter tuning
 xgb_grid = GridSearchCV(xgb_model, xgb_param_grid)
+
+# Fit the model with training data
 xgb_grid.fit(scaled_X_train, y_train)
 
-# Make predictions using the best model
+# Make predictions using the  model
 xgb_predictions = xgb_grid.predict(scaled_X_test)
 
 # Calculate accuracy and confusion matrix
 xgb_ac = accuracy_score(y_test, xgb_predictions)
 rounded_xgb_ac = np.round(float(xgb_ac), 2)
-print(f"Accuracy: {rounded_xgb_ac * 100}")
+print(f"XG Boost Accuracy: {rounded_xgb_ac * 100}")
 
 xgb_cm = confusion_matrix(y_test, xgb_predictions)
-print("Confusion Matrix:")
+print("\nXG Boost Confusion Matrix:")
 print(xgb_cm)
 
 ############################################# CAT Boost #############################################
@@ -249,10 +394,10 @@ catboost_predictions = catboost_grid.predict(scaled_X_test)
 # Calculate accuracy and confusion matrix
 catboost_ac = accuracy_score(y_test, catboost_predictions)
 rounded_catboost_ac = np.round(float(catboost_ac), 2)
-print(f"Accuracy: {rounded_catboost_ac * 100}")
+print(f"CAT Boost Accuracy: {rounded_catboost_ac * 100}")
 
 catboost_cm = confusion_matrix(y_test, catboost_predictions)
-print("Confusion Matrix:")
+print("CAT Boost Confusion Matrix:")
 print(catboost_cm)
 
 # Predicting on New Data
@@ -265,7 +410,7 @@ my_data = pd.DataFrame(data_new, index)
 # Function to predict on New Data
 
 def log_reg():
-    """Function for Logestic Regression"""
+    """Predicts the outcome using Logistic Regression on new data and prints the result."""
     data_output = log_model.predict(my_data.values)
     
     if data_output == 0:
@@ -276,13 +421,13 @@ def log_reg():
     print(f"Above data is calculated with an Accuracy {rounded_log_ac * 100}% ")
     
 def knn_reg():
-    """Function for KNN"""
+    """Predicts the outcome using K-Nearest Neighbors on new data and prints the result."""
     data_output = full_cv_classifier.predict(my_data.values)
     
     if data_output == 0:
-        print("Predicted using Logistic Regression: The customer will continue ")
+        print("Predicted using KNN : The customer will continue ")
     else:
-        print("Predicted using Logistic Regression: The customer will exit ")    
+        print("Predicted using KNN : The customer will exit ")    
 
     print(f"Above data is calculated with an Accuracy {rounded_knn_ac * 100}% ")
 
@@ -291,76 +436,76 @@ def knn_reg():
     
 #     if data_output == 0:
 #         if data_output == 0:
-      #   print("Predicted using Logistic Regression: The customer will continue ")
+      #   print("Predicted using Support Vector Machine: The customer will continue ")
       # else:
-      #   print("Predicted using Logistic Regression: The customer will exit ")
+      #   print("Predicted using Support Vector Machine: The customer will exit ")
 
 #     print(f"Above data is calculated with an Accuracy {rounded_svc_ac * 100}% ")
     
 def dt_reg():
-    """Function for Decision Tree"""
+    """Predicts the outcome using Decision Tree on new data and prints the result."""
     data_output = decision_tree_model.predict(my_data.values)
     
     if data_output == 0:
-        print("Predicted using Logistic Regression: The customer will continue ")
+        print("Predicted using Decision Tree: The customer will continue ")
     else:
-        print("Predicted using Logistic Regression: The customer will exit ")    
+        print("Predicted using Decision Tree: The customer will exit ")    
 
     print(f"Above data is calculated with an Accuracy {rounded_dt_ac * 100}% ")
     
 def rf_reg():
-    """Function for Random Forest"""
+    """Predicts the outcome using Random Forest on new data and prints the result."""
     data_output = Random_Forest_model.predict(my_data.values)
     
     if data_output == 0:
-        print("Predicted using Logistic Regression: The customer will continue ")
+        print("Predicted using Random Forest: The customer will continue ")
     else:
-        print("Predicted using Logistic Regression: The customer will exit ")
+        print("Predicted using Random Forest: The customer will exit ")
 
     print(f"Above data is calculated with an Accuracy {rounded_rf_ac * 100}% ")
 
 def adb_boosting():
-    """Function for Ada Boost"""
+    """Predicts the outcome using Ada Boost on new data and prints the result."""
     data_output = ada_boost_model.predict(my_data.values)
     
     if data_output == 0:
-        print("Predicted using Logistic Regression: The customer will continue ")
+        print("Predicted using Ada Boost: The customer will continue ")
     else:
-        print("Predicted using Logistic Regression: The customer will exit ")
+        print("Predicted using Ada Boost: The customer will exit ")
 
     print(f"Above data is calculated with an Accuracy {rounded_adb_ac * 100}% ")
     
 def gb_boosting():
-    """Function for Gradient Boost"""
+    """Predicts the outcome using Gradient Boost on new data and prints the result."""
     data_output = gb_grid.predict(my_data.values)
    
     if data_output == 0:
-        print("Predicted using Logistic Regression: The customer will continue ")
+        print("Predicted using Gradient Boost: The customer will continue ")
     else:
-        print("Predicted using Logistic Regression: The customer will exit ")
+        print("Predicted using Gradient Boost: The customer will exit ")
 
 
     print(f"Above data is calculated with an Accuracy {rounded_gb_ac * 100}% ")
     
 def xg_boost():
-    """Function for Xg Boost"""
+    """Predicts the outcome using XG Boost on new data and prints the result."""
     data_output = xgb_grid.predict(my_data.values)
     
     if data_output == 0:
-        print("Predicted using Logistic Regression: The customer will continue ")
+        print("Predicted using XG Boost: The customer will continue ")
     else:
-        print("Predicted using Logistic Regression: The customer will exit ")
+        print("Predicted using XG Boost: The customer will exit ")
 
     print(f"Above data is calculated with an Accuracy {rounded_xgb_ac * 100}% ")
     
 def cat_boost():
-    """Function for CAT Boost"""
+    """Predicts the outcome using Cat Boost on new data and prints the result."""
     data_output = catboost_grid.predict(my_data.values)
     
     if data_output == 0:
-        print("Predicted using Logistic Regression: The customer will continue ")
+        print("Predicted using Cat Boost: The customer will continue ")
     else:
-        print("Predicted using Logistic Regression: The customer will exit ")
+        print("Predicted using Cat Boost: The customer will exit ")
 
     print(f"Above data is calculated with an Accuracy {rounded_catboost_ac * 100}% ")
     
@@ -400,3 +545,38 @@ elif max_accuracy_key == 'catboost_ac':
     cat_boost()
 else:
     gb_boosting()
+
+
+# Find the maximum accuracy
+max_accuracy_value = max(model_accuracies.values())
+
+# Find all models with the maximum accuracy
+best_models = [key for key, value in model_accuracies.items() if value == max_accuracy_value]
+
+# Handle the case where there are multiple best models (e.g., by printing them)
+if len(best_models) == 1:
+    best_model = best_models[0]
+    if best_model == 'log_ac':
+        log_reg()
+    elif best_model == 'knn_ac':
+        knn_reg()
+#     elif best_model == 'svc_ac':
+#         svc_reg()
+    elif best_model == 'dt_ac':
+        dt_reg()
+    elif best_model == 'rf_ac':
+        rf_reg()
+    elif best_model == 'adb_ac':
+        adb_boosting()
+    elif best_model == 'xgb_ac':
+        xg_boost()
+    elif best_model == 'catboost_ac':
+        cat_boost()
+    else:
+        gb_boosting()
+else:
+    print(f"Multiple models ({', '.join(best_models)}) have the same maximum accuracy.")
+    # Handle the case of multiple best models as needed
+
+
+    
